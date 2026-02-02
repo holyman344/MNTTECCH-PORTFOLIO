@@ -1,0 +1,1361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MNTTECH | Premium Web Development Services</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style id="dynamicStyles">
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+:root {
+  --primary: #0a1a0a;
+  --secondary: #0f2d0f;
+  --accent: #00c853;
+  --accent-light: #64ffda;
+  --text: #f0f9f0;
+  --text-secondary: #b0c8b0;
+  --card-bg: rgba(25, 45, 25, 0.7);
+  --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+body {
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: var(--text);
+  overflow-x: hidden;
+  line-height: 1.6;
+  position: relative;
+}
+/* Loading Overlay */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(10, 26, 10, 0.95);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  transition: opacity 0.5s ease, visibility 0.5s ease;
+  pointer-events: none;
+}
+.loading-overlay.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+.loading-content {
+  text-align: center;
+  position: relative;
+  z-index: 2;
+}
+.loading-logo {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 3rem;
+  font-weight: 700;
+  background: linear-gradient(45deg, var(--accent), var(--accent-light));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin-bottom: 1.5rem;
+  letter-spacing: 2px;
+}
+.loading-progress {
+  width: 200px;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  margin: 20px auto 0;
+  overflow: hidden;
+  position: relative;
+}
+.progress-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--accent), var(--accent-light));
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+/* === Animated Keyboard + Code Background === */
+.keyboard-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+.keyboard-element {
+  position: absolute;
+  background: rgba(10, 30, 10, 0.4);
+  border: 1px solid rgba(0, 200, 83, 0.2);
+  border-radius: 6px;
+  box-shadow: 
+    0 0 8px rgba(0, 200, 83, 0.2),
+    inset 0 0 4px rgba(100, 255, 218, 0.1);
+  backdrop-filter: blur(2px);
+  font-family: 'Orbitron', monospace;
+  color: rgba(100, 255, 218, 0.8);
+  font-size: 0.7rem;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0.6;
+}
+.code-snippet {
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+/* === Splash Welcome Prompt === */
+.welcome-splash {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(5, 15, 5, 0.92);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9998;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease;
+  backdrop-filter: blur(4px);
+}
+.welcome-splash.active {
+  opacity: 1;
+  visibility: visible;
+}
+.splash-content {
+  text-align: center;
+  padding: 40px;
+  max-width: 520px;
+  width: 90%;
+  background: rgba(10, 26, 10, 0.7);
+  border-radius: 16px;
+  border: 1px solid rgba(100, 255, 218, 0.2);
+  box-shadow: 0 0 0 1px rgba(0, 200, 83, 0.3),
+              0 10px 30px rgba(0, 0, 0, 0.5);
+  transform: scale(0.95);
+  animation: splashReveal 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+@keyframes splashReveal {
+  0% { transform: scale(0.8) rotate(-2deg); opacity: 0; }
+  70% { transform: scale(1.02) rotate(0.5deg); }
+  100% { transform: scale(1) rotate(0); opacity: 1; }
+}
+.splash-text {
+  font-family: 'Orbitron', monospace;
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #64ffda;
+  letter-spacing: 1px;
+  line-height: 1.3;
+  text-shadow: 0 0 10px rgba(100, 255, 218, 0.4);
+}
+.splash-subtext {
+  font-family: 'Poppins', sans-serif;
+  color: var(--text-secondary);
+  margin-bottom: 28px;
+  font-size: 1.05rem;
+  line-height: 1.5;
+}
+.splash-btn {
+  background: transparent;
+  color: var(--accent-light);
+  border: 1px solid var(--accent);
+  padding: 12px 32px;
+  border-radius: 8px;
+  font-family: 'Orbitron', monospace;
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: var(--transition);
+  text-transform: uppercase;
+}
+.splash-btn:hover {
+  background: rgba(0, 200, 83, 0.15);
+  transform: translateY(-2px);
+  box-shadow: 0 0 15px rgba(0, 200, 83, 0.3);
+}
+
+/* Main Content */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+/* Header */
+header {
+  padding: 20px 0;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 100;
+  background: rgba(10, 26, 10, 0.9);
+  backdrop-filter: blur(10px);
+  transition: var(--transition);
+}
+.header.scrolled {
+  padding: 12px 0;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+}
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.logo {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  background: linear-gradient(45deg, var(--accent), var(--accent-light));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-decoration: none;
+}
+.nav-links {
+  display: flex;
+  list-style: none;
+}
+.nav-links li {
+  margin-left: 30px;
+}
+.nav-links a {
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 500;
+  position: relative;
+  padding: 5px 0;
+  transition: var(--transition);
+}
+.nav-links a:hover {
+  color: var(--accent-light);
+}
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--accent);
+  transition: var(--transition);
+}
+.nav-links a:hover::after {
+  width: 100%;
+}
+.menu-toggle {
+  display: none;
+  cursor: pointer;
+  font-size: 1.5rem;
+}
+/* Hero Section */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding-top: 80px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(0, 200, 83, 0.1) 0%, transparent 70%);
+  z-index: -1;
+}
+.hero-content {
+  max-width: 650px;
+}
+.hero h1 {
+  font-size: 3.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 20px;
+}
+.hero h1 span {
+  background: linear-gradient(45deg, var(--accent), var(--accent-light));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.hero p {
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+  margin-bottom: 30px;
+}
+.cta-button {
+  display: inline-block;
+  background: linear-gradient(45deg, var(--accent), var(--accent-light));
+  color: white;
+  padding: 14px 32px;
+  border-radius: 50px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.1rem;
+  transition: var(--transition);
+  box-shadow: 0 10px 20px rgba(0, 200, 83, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+.cta-button:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0, 200, 83, 0.4);
+}
+.cta-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: 0.5s;
+}
+.cta-button:hover::before {
+  left: 100%;
+}
+.hero-image {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 45%;
+  max-width: 600px;
+  opacity: 0.9;
+  animation: float 8s ease-in-out infinite;
+}
+@keyframes float {
+  0% { transform: translateY(-50%) translateX(0); }
+  50% { transform: translateY(-52%) translateX(10px); }
+  100% { transform: translateY(-50%) translateX(0); }
+}
+/* Services Section */
+.services {
+  padding: 100px 0;
+}
+.section-title {
+  text-align: center;
+  margin-bottom: 60px;
+}
+.section-title h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 15px;
+}
+.section-title p {
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto;
+}
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+}
+.service-card {
+  background: var(--card-bg);
+  border-radius: 20px;
+  padding: 30px;
+  transition: var(--transition);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 200, 83, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+.service-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-light));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.5s ease;
+}
+.service-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+.service-card:hover::before {
+  transform: scaleX(1);
+}
+.service-icon {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  background: linear-gradient(45deg, var(--accent), var(--accent-light));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.service-card h3 {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+}
+.service-card p {
+  color: var(--text-secondary);
+  margin-bottom: 15px;
+}
+.price-tag {
+  background: rgba(0, 200, 83, 0.15);
+  color: var(--accent);
+  display: inline-block;
+  padding: 5px 15px;
+  border-radius: 50px;
+  font-weight: 600;
+  margin-top: 10px;
+}
+/* Portfolio Section */
+.portfolio {
+  padding: 100px 0;
+  background: rgba(15, 45, 15, 0.5);
+}
+.portfolio-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+}
+.portfolio-item {
+  border-radius: 20px;
+  overflow: hidden;
+  position: relative;
+  height: 300px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+.portfolio-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: var(--transition);
+}
+.portfolio-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(10, 26, 10, 0.8);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: var(--transition);
+  padding: 20px;
+  text-align: center;
+}
+.portfolio-item:hover .portfolio-img {
+  transform: scale(1.1);
+}
+.portfolio-item:hover .portfolio-overlay {
+  opacity: 1;
+}
+.portfolio-overlay h3 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+.portfolio-overlay p {
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+}
+/* Contact Section */
+.contact {
+  padding: 100px 0;
+}
+.contact-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 50px;
+}
+.contact-info h3 {
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+}
+.contact-detail {
+  display: flex;
+  margin-bottom: 25px;
+}
+.contact-icon {
+  font-size: 1.5rem;
+  color: var(--accent);
+  margin-right: 15px;
+  min-width: 30px;
+}
+.contact-form .form-group {
+  margin-bottom: 20px;
+}
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  padding: 15px;
+  background: var(--card-bg);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  color: var(--text);
+  font-family: 'Poppins', sans-serif;
+  font-size: 1rem;
+  transition: var(--transition);
+}
+.contact-form input:focus,
+.contact-form textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(0, 200, 83, 0.2);
+}
+.contact-form textarea {
+  min-height: 150px;
+  resize: vertical;
+}
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+.modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+.modal {
+  background: var(--primary);
+  width: 90%;
+  max-width: 600px;
+  border-radius: 20px;
+  overflow: hidden;
+  transform: translateY(50px);
+  transition: transform 0.4s ease;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+  position: relative;
+}
+.modal-overlay.active .modal {
+  transform: translateY(0);
+}
+.modal-header {
+  background: linear-gradient(90deg, var(--accent), var(--accent-light));
+  padding: 25px;
+  text-align: center;
+}
+.modal-header h2 {
+  font-size: 1.8rem;
+  color: var(--primary);
+  font-weight: 700;
+}
+.close-modal {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.close-modal:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: rotate(90deg);
+}
+.modal-body {
+  padding: 30px;
+}
+
+/* === Inquiry Form Styling === */
+.inquiry-form .form-group {
+  margin-bottom: 20px;
+}
+.inquiry-form label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+/* === MODERN PROJECT TYPE HEADER === */
+.project-type-header {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--accent-light);
+  margin-bottom: 12px;
+  position: relative;
+  opacity: 0;
+  animation: fadeInUp 0.6s ease forwards 0.2s;
+}
+.project-type-header::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-light));
+  animation: growLine 0.8s ease forwards 0.4s;
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes growLine {
+  to { width: 100%; }
+}
+
+.inquiry-form input,
+.inquiry-form select,
+.inquiry-form textarea {
+  width: 100%;
+  padding: 14px;
+  background: var(--card-bg);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  color: var(--text);
+  font-family: 'Poppins', sans-serif;
+  font-size: 1rem;
+  transition: var(--transition);
+}
+.inquiry-form input:focus,
+.inquiry-form select:focus,
+.inquiry-form textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(0, 200, 83, 0.2);
+}
+.inquiry-form textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+/* Custom dropdown arrow */
+.inquiry-form select {
+  appearance: none;
+  background-image: url("image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364ffda' stroke-width='2'%3e%3cpath d='M6 9l6 6 6-6'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 14px;
+  padding-right: 36px;
+}
+
+/* Responsive Project Type & Form Fields */
+@media (max-width: 768px) {
+  .inquiry-form select,
+  .inquiry-form input,
+  .inquiry-form textarea {
+    padding: 12px;
+    font-size: 0.95rem;
+  }
+
+  #projectType {
+    padding: 12px 10px;
+    min-height: 44px;
+  }
+}
+
+/* === MOBILE MODAL SCROLL FIX === */
+@media (max-width: 768px) {
+  .modal-body {
+    max-height: 70vh;
+    overflow-y: auto;
+    padding: 20px 15px;
+  }
+
+  /* Ensure buttons are not cut off */
+  .submit-btn {
+    margin-bottom: 25px !important;
+  }
+
+  /* Optional: subtle scroll indicator */
+  .modal-body::after {
+    content: '';
+    position: sticky;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 30px;
+    background: linear-gradient(to top, var(--primary), transparent);
+    pointer-events: none;
+    z-index: 1;
+  }
+}
+
+.submit-btn {
+  background: linear-gradient(45deg, var(--accent), var(--accent-light));
+  color: var(--primary);
+  border: none;
+  padding: 14px 32px;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: var(--transition);
+  width: 100%;
+  margin-top: 10px;
+}
+.submit-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0, 200, 83, 0.3);
+}
+/* Footer */
+footer {
+  padding: 50px 0 20px;
+  text-align: center;
+  background: rgba(5, 15, 5, 0.8);
+}
+.social-links {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+.social-links a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: var(--card-bg);
+  color: var(--text);
+  margin: 0 10px;
+  transition: var(--transition);
+}
+.social-links a:hover {
+  background: var(--accent);
+  transform: translateY(-5px);
+}
+.copyright {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+/* Responsive Design */
+@media (max-width: 992px) {
+  .hero h1 { font-size: 2.8rem; }
+  .hero-image { width: 40%; }
+}
+@media (max-width: 768px) {
+  .menu-toggle { display: block; }
+  .nav-links {
+    position: fixed;
+    top: 80px;
+    left: 0;
+    width: 100%;
+    background: var(--primary);
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 0;
+    clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+    transition: clip-path 0.5s ease;
+  }
+  .nav-links.active {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  }
+  .nav-links li { margin: 15px 0; }
+  .hero {
+    text-align: center;
+    padding-top: 100px;
+  }
+  .hero-content { margin: 0 auto; }
+  .hero-image { display: none; }
+  .loading-logo { font-size: 2.5rem; }
+  .modal { width: 95%; }
+  .splash-content { padding: 30px 20px; }
+}
+@media (max-width: 576px) {
+  .hero h1 { font-size: 2.2rem; }
+  .section-title h2 { font-size: 2rem; }
+  .loading-logo { font-size: 2rem; }
+  .service-card { padding: 20px; }
+}
+
+/* === Auto-Reply Social Icons === */
+.auto-reply-social {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+.auto-reply-social a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--accent-light);
+  font-size: 1.2rem;
+  transition: var(--transition);
+  text-decoration: none;
+}
+.auto-reply-social a:hover {
+  background: var(--accent);
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 200, 83, 0.4);
+}
+</style>
+</head>
+<body>
+
+<!-- Animated Keyboard + Code Background -->
+<div class="keyboard-bg" id="keyboardBg"></div>
+
+<!-- Loading Overlay -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-content">
+    <div class="loading-logo">MNTTECH</div>
+    <div class="loading-progress">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Splash Welcome Prompt -->
+<div class="welcome-splash" id="welcomePrompt">
+  <div class="splash-content">
+    <h2 id="welcomeMessage" class="splash-text"></h2>
+    <p class="splash-subtext">Let’s build your dream project together.</p>
+    <button class="splash-btn" id="closeWelcome">Continue</button>
+  </div>
+</div>
+
+<header id="header">
+  <div class="container">
+    <nav class="navbar">
+      <a href="#" class="logo">MNTTECH</a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#portfolio">Portfolio</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <div class="menu-toggle" id="menuToggle">
+        <i class="fas fa-bars"></i>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <!-- Hero Section -->
+  <section class="hero" id="home">
+    <div class="container">
+      <div class="hero-content">
+        <h1>Transform Your Digital <span>Presence</span> with Premium Web Solutions</h1>
+        <p>MNTTECH specializes in crafting cutting-edge web applications, mobile apps, and PHP solutions that drive business growth and user engagement.</p>
+        <a href="#" class="cta-button" id="openInquiryModal">Get Started Today</a>
+      </div>
+    </div>
+    <div class="hero-image">
+      <svg viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
+        <path fill="none" stroke="url(#gradient)" stroke-width="2" d="M300,50 C300,50 500,150 500,300 C500,450 300,550 300,550 C300,550 100,450 100,300 C100,150 300,50 300,50 Z" />
+        <defs>
+          <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#00c853" />
+            <stop offset="100%" stop-color="#64ffda" />
+          </linearGradient>
+        </defs>
+        <circle cx="300" cy="300" r="150" fill="none" stroke="url(#gradient)" stroke-width="2" opacity="0.5" />
+        <circle cx="300" cy="300" r="80" fill="none" stroke="url(#gradient)" stroke-width="2" opacity="0.7" />
+      </svg>
+    </div>
+  </section>
+
+  <!-- Services Section -->
+  <section class="services" id="services">
+    <div class="container">
+      <div class="section-title">
+        <h2>Our Premium Services</h2>
+        <p>We deliver innovative solutions tailored to your unique business needs</p>
+      </div>
+      <div class="services-grid">
+        <div class="service-card">
+          <div class="service-icon"><i class="fas fa-code"></i></div>
+          <h3>Custom Web Applications</h3>
+          <p>Bespoke web applications built with modern frameworks to solve your specific business challenges.</p>
+          <div class="price-tag">From $150</div>
+        </div>
+        <div class="service-card">
+          <div class="service-icon"><i class="fas fa-server"></i></div>
+          <h3>PHP Development</h3>
+          <p>Robust, scalable, and secure PHP solutions using Laravel, Symfony, and custom frameworks.</p>
+          <div class="price-tag">From $150</div>
+        </div>
+        <div class="service-card">
+          <div class="service-icon"><i class="fas fa-mobile-alt"></i></div>
+          <h3>Mobile Applications</h3>
+          <p>Cross-platform mobile apps for iOS and Android with native performance and user experience.</p>
+          <div class="price-tag">From $300</div>
+        </div>
+        <div class="service-card">
+          <div class="service-icon"><i class="fas fa-cloud"></i></div>
+          <h3>Cloud Integration</h3>
+          <p>Seamless integration with AWS, Azure, and Google Cloud for scalable infrastructure.</p>
+          <div class="price-tag">From $200</div>
+        </div>
+        <div class="service-card">
+          <div class="service-icon"><i class="fas fa-lock"></i></div>
+          <h3>Security Solutions</h3>
+          <p>Enterprise-grade security implementations to protect your data and applications.</p>
+          <div class="price-tag">From $250</div>
+        </div>
+        <div class="service-card">
+          <div class="service-icon"><i class="fas fa-sync-alt"></i></div>
+          <h3>Maintenance & Support</h3>
+          <p>Ongoing support and maintenance to ensure your applications run smoothly.</p>
+          <div class="price-tag">From $100/month</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Portfolio Section -->
+  <section class="portfolio" id="portfolio">
+    <div class="container">
+      <div class="section-title">
+        <h2>Our Portfolio</h2>
+        <p>Explore our latest projects and innovative solutions</p>
+      </div>
+      <div class="portfolio-grid">
+        <div class="portfolio-item">
+          <img src="https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=600&q=80" alt="E-commerce Platform" class="portfolio-img">
+          <div class="portfolio-overlay">
+            <h3>E-commerce Platform</h3>
+            <p>Laravel-based marketplace with real-time inventory</p>
+            <a href="#" class="cta-button">View Project</a>
+          </div>
+        </div>
+        <div class="portfolio-item">
+          <img src="https://images.unsplash.com/photo-1553877522-43269d4ea984?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=600&q=80" alt="Healthcare Portal" class="portfolio-img">
+          <div class="portfolio-overlay">
+            <h3>Healthcare Portal</h3>
+            <p>Secure patient management system with HIPAA compliance</p>
+            <a href="#" class="cta-button">View Project</a>
+          </div>
+        </div>
+        <div class="portfolio-item">
+          <img src="https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=600&q=80" alt="Fintech Dashboard" class="portfolio-img">
+          <div class="portfolio-overlay">
+            <h3>Fintech Dashboard</h3>
+            <p>Real-time financial analytics and reporting platform</p>
+            <a href="#" class="cta-button">View Project</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section class="contact" id="contact">
+    <div class="container">
+      <div class="section-title">
+        <h2>Get In Touch</h2>
+        <p>Ready to transform your digital presence? Let's discuss your project</p>
+      </div>
+      <div class="contact-container">
+        <div class="contact-info">
+          <h3>Contact Information</h3>
+          <div class="contact-detail">
+            <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+            <div><h4>Email</h4><p>hello@mnttech.io</p></div>
+          </div>
+          <div class="contact-detail">
+            <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
+            <div><h4>Location</h4><p>San Francisco, CA</p></div>
+          </div>
+          <div class="contact-detail">
+            <div class="contact-icon"><i class="fab fa-whatsapp"></i></div>
+            <div><h4>WhatsApp</h4><p>+234 815 230 0864</p></div>
+          </div>
+        </div>
+        <div class="contact-form">
+          <form id="contactForm">
+            <div class="form-group"><input type="text" id="contactName" placeholder="Your Name" required></div>
+            <div class="form-group"><input type="email" id="contactEmail" placeholder="Your Email" required></div>
+            <div class="form-group"><input type="text" id="contactSubject" placeholder="Subject"></div>
+            <div class="form-group"><textarea id="contactMessage" placeholder="Your Message" required></textarea></div>
+            <button type="submit" class="cta-button">Send via WhatsApp</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Inquiry Modal -->
+<div class="modal-overlay" id="inquiryModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Start Your Project With Us</h2>
+      <button class="close-modal" id="closeModal">&times;</button>
+    </div>
+    <div class="modal-body">
+      <form class="inquiry-form" id="inquiryForm">
+        <!-- MODERN DYNAMIC HEADER -->
+        <div class="project-type-header">Select Your Project</div>
+        <div class="form-group">
+          <select id="projectType" required>
+            <option value="">Choose a service</option>
+            <option value="website-dev|150">Website Development</option>
+            <option value="web-app|150">Custom Web Application</option>
+            <option value="php-dev|150">PHP Development</option>
+            <option value="mobile-app|300">Mobile Applications</option>
+            <option value="cloud-integration|200">Cloud Integration</option>
+            <option value="security|250">Security Solutions</option>
+            <option value="maintenance|100">Maintenance & Support</option>
+            <option value="other|0">Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="name">Full Name</label>
+          <input type="text" id="name" placeholder="Enter your full name" required>
+        </div>
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" placeholder="Enter your email" required>
+        </div>
+        <div class="form-group">
+          <label for="phone">Phone Number (WhatsApp)</label>
+          <input type="tel" id="phone" placeholder="Enter your WhatsApp number" required>
+        </div>
+        <div class="form-group">
+          <label for="budget">Estimated Budget</label>
+          <select id="budget" required>
+            <option value="">Select budget range</option>
+            <option value="200-500">$200 - $500</option>
+            <option value="500-1k">$500 - $1,000</option>
+            <option value="1k-5k">$1,000 - $5,000</option>
+            <option value="5k-10k">$5,000 - $10,000</option>
+            <option value="10k-25k">$10,000 - $25,000</option>
+            <option value="25k+">$25,000+</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="message">Project Details</label>
+          <textarea id="message" placeholder="Describe your project requirements..."></textarea>
+        </div>
+        <button type="submit" class="submit-btn">Submit Request via WhatsApp</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Auto-Reply Modal -->
+<div class="modal-overlay" id="autoReplyModal">
+  <div class="modal" style="max-width: 500px;">
+    <div class="modal-header" style="padding: 20px;">
+      <h2>Message Sent!</h2>
+      <button class="close-modal" id="closeAutoReply">&times;</button>
+    </div>
+    <div class="modal-body" style="padding: 25px; text-align: center;">
+      <div style="font-size: 3rem; margin-bottom: 15px;">📨</div>
+      <p id="autoReplyText" style="color: var(--text-secondary); line-height: 1.6; font-size: 1.05rem;">
+        Thanks for reaching out! 🚀<br>
+        We’ve received your request and will get back to you within 2 hours.<br>
+        In the meantime, feel free to explore our portfolio or follow us on social media!
+      </p>
+      
+      <!-- SOCIAL ICONS -->
+      <div class="auto-reply-social">
+        <a href="https://twitter.com" target="_blank" aria-label="Twitter">
+          <i class="fab fa-twitter"></i>
+        </a>
+        <a href="https://t.me/yourusername" target="_blank" aria-label="Telegram">
+          <i class="fab fa-telegram"></i>
+        </a>
+      </div>
+      
+      <!-- WHATSAPP BUTTON -->
+      <a href="https://wa.me/2348152300864" class="submit-btn" style="margin-top: 25px; width: auto; padding: 10px 24px; display: inline-block;" target="_blank">
+        Chat on WhatsApp
+      </a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+    <div class="social-links">
+      <a href="https://twitter.com" target="_blank"><i class="fab fa-twitter"></i></a>
+      <a href="https://linkedin.com" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+      <a href="https://github.com" target="_blank"><i class="fab fa-github"></i></a>
+      <a href="https://dribbble.com" target="_blank"><i class="fab fa-dribbble"></i></a>
+    </div>
+    <p class="copyright">© 2026 MNTTECH. All rights reserved.</p>
+  </div>
+</footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // === LOADING + SPLASH PROMPT ===
+  const loadingOverlay = document.getElementById('loadingOverlay');
+  const progressBar = document.getElementById('progressBar');
+  const welcomePrompt = document.getElementById('welcomePrompt');
+  const welcomeMessage = document.getElementById('welcomeMessage');
+  const closeWelcome = document.getElementById('closeWelcome');
+
+  let progress = 0;
+  const interval = setInterval(() => {
+    progress += 5;
+    if (progress >= 100) {
+      progress = 100;
+      clearInterval(interval);
+      progressBar.style.width = '100%';
+      
+      setTimeout(() => {
+        loadingOverlay.classList.add('hidden');
+        
+        // Typewriter effect
+        const visitorName = "Visionary";
+        const fullMessage = `Welcome, Dear ${visitorName}!`;
+        let i = 0;
+        const typeInterval = setInterval(() => {
+          if (i <= fullMessage.length) {
+            welcomeMessage.textContent = fullMessage.slice(0, i);
+            i++;
+          } else {
+            clearInterval(typeInterval);
+          }
+        }, 60);
+
+        setTimeout(() => {
+          welcomePrompt.classList.add('active');
+          const autoClose = setTimeout(() => {
+            welcomePrompt.classList.remove('active');
+          }, 4000);
+          closeWelcome.onclick = () => {
+            clearTimeout(autoClose);
+            welcomePrompt.classList.remove('active');
+          };
+        }, 200);
+      }, 300);
+    } else {
+      progressBar.style.width = progress + '%';
+    }
+  }, 80);
+
+  // === ANIMATED KEYBOARD + CODE BACKGROUND ===
+  function createTechBackground() {
+    const container = document.getElementById('keyboardBg');
+    if (!container) return;
+
+    const keys = ['ESC','F1','~','1','2','3','Q','W','E','TAB','CAPS','ENTER','SHIFT','CTRL','ALT','CMD','SPACE'];
+    const codeSnippets = [
+      'console.log("build")',
+      '<?php echo $dream; ?>',
+      'def launch_project():',
+      'git commit -m "🚀"',
+      'npm start',
+      'SELECT * FROM success;',
+      'docker run --dream',
+      '<App />',
+      'fetch("/api/vision")'
+    ];
+
+    const totalElements = window.innerWidth > 768 ? 50 : 25;
+    const colors = ['#00c853', '#64ffda', '#a0ffcc'];
+
+    for (let i = 0; i < totalElements; i++) {
+      const isCode = Math.random() > 0.6;
+      const element = document.createElement('div');
+      element.className = 'keyboard-element';
+      
+      if (isCode) {
+        element.innerHTML = `<span class="code-snippet">${codeSnippets[Math.floor(Math.random() * codeSnippets.length)]}</span>`;
+        element.style.fontSize = '0.65rem';
+        element.style.padding = '4px 6px';
+      } else {
+        element.textContent = keys[Math.floor(Math.random() * keys.length)];
+        const size = Math.random() * 25 + 25;
+        element.style.width = `${size}px`;
+        element.style.height = `${size * 0.8}px`;
+        element.style.fontSize = `${size * 0.25}px`;
+      }
+
+      const posX = Math.random() * 100;
+      const posY = Math.random() * 100;
+      element.style.left = `${posX}%`;
+      element.style.top = `${posY}%`;
+
+      const color = colors[Math.floor(Math.random() * colors.length)];
+      element.style.boxShadow = `0 0 ${10 + Math.random() * 10}px ${color}40, inset 0 0 ${5}px ${color}20`;
+      element.style.borderColor = `${color}40`;
+
+      container.appendChild(element);
+      animateElement(element, posX, posY);
+    }
+  }
+
+  function animateElement(el, startX, startY) {
+    let phase = Math.random() * Math.PI * 2;
+    const speed = 0.5 + Math.random() * 0.5;
+    const amplitude = 0.5 + Math.random() * 1.2;
+    
+    function update() {
+      phase += 0.02;
+      const offsetX = Math.sin(phase * speed) * amplitude;
+      const offsetY = Math.cos(phase * speed * 0.7) * amplitude;
+      el.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+      requestAnimationFrame(update);
+    }
+    update();
+  }
+
+  createTechBackground();
+
+  // === MOBILE MENU, HEADER, MODAL, FORMS ===
+  const menuToggle = document.getElementById('menuToggle');
+  const navLinks = document.getElementById('navLinks');
+  menuToggle.addEventListener('click', () => navLinks.classList.toggle('active'));
+  document.querySelectorAll('.nav-links a').forEach(link => {
+    link.addEventListener('click', () => navLinks.classList.remove('active'));
+  });
+
+  const header = document.getElementById('header');
+  window.addEventListener('scroll', () => {
+    header.classList.toggle('scrolled', window.scrollY > 100);
+  });
+
+  const openModalBtn = document.getElementById('openInquiryModal');
+  const closeModalBtn = document.getElementById('closeModal');
+  const modalOverlay = document.getElementById('inquiryModal');
+  openModalBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    modalOverlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  });
+  [closeModalBtn, modalOverlay].forEach(el => {
+    el.addEventListener('click', (e) => {
+      if (e.target === modalOverlay || e.target === closeModalBtn) {
+        modalOverlay.classList.remove('active');
+        document.body.style.overflow = 'auto';
+      }
+    });
+  });
+
+  // === INQUIRY FORM → CLEAN WHATSAPP MESSAGE ===
+  const inquiryForm = document.getElementById('inquiryForm');
+  if (inquiryForm) {
+    inquiryForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const projectTypeValue = document.getElementById('projectType').value;
+      const [projectType, basePrice] = projectTypeValue.split('|');
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const phone = document.getElementById('phone').value;
+      const budget = document.getElementById('budget').value;
+      const message = document.getElementById('message').value;
+
+      const projectTypes = {
+        'website-dev': 'Website Development',
+        'web-app': 'Custom Web Application',
+        'php-dev': 'PHP Development',
+        'mobile-app': 'Mobile Applications',
+        'cloud-integration': 'Cloud Integration',
+        'security': 'Security Solutions',
+        'maintenance': 'Maintenance & Support',
+        'other': 'Other'
+      };
+      const projectName = projectTypes[projectType] || 'Custom Project';
+
+      const budgetOptions = {
+        '200-500': '$200 - $500',
+        '500-1k': '$500 - $1,000',
+        '1k-5k': '$1,000 - $5,000',
+        '5k-10k': '$5,000 - $10,000',
+        '10k-25k': '$10,000 - $25,000',
+        '25k+': '$25,000+'
+      };
+      const budgetDisplay = budgetOptions[budget] || budget;
+
+      // ✅ CLEAN MESSAGE — NO AUTO-REPLY SIMULATION
+      const whatsappMessage = `Hello MNTTECH! I'm interested in your services.\n\nProject Type: ${projectName}\nBase Price: $${basePrice}+\nName: ${name}\nEmail: ${email}\nPhone: ${phone}\nBudget Range: ${budgetDisplay}\nProject Details: ${message}`;
+      const encodedMessage = encodeURIComponent(whatsappMessage);
+      const whatsappUrl = `https://wa.me/2348152300864?text=${encodedMessage}`;
+      
+      window.open(whatsappUrl, '_blank');
+      
+      // Show confirmation modal
+      document.getElementById('autoReplyModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+      
+      inquiryForm.reset();
+      setTimeout(() => {
+        modalOverlay.classList.remove('active');
+      }, 1000);
+    });
+  }
+
+  // === CONTACT FORM → CLEAN WHATSAPP MESSAGE ===
+  const contactForm = document.getElementById('contactForm');
+  if (contactForm) {
+    contactForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('contactName').value;
+      const email = document.getElementById('contactEmail').value;
+      const subject = document.getElementById('contactSubject').value;
+      const message = document.getElementById('contactMessage').value;
+
+      // ✅ CLEAN MESSAGE — NO AUTO-REPLY SIMULATION
+      const whatsappMessage = `Hello MNTTECH! I have a question.\n\nName: ${name}\nEmail: ${email}\nSubject: ${subject}\nMessage: ${message}`;
+      const encodedMessage = encodeURIComponent(whatsappMessage);
+      const whatsappUrl = `https://wa.me/2348152300864?text=${encodedMessage}`;
+      
+      window.open(whatsappUrl, '_blank');
+      
+      // Show confirmation modal
+      document.getElementById('autoReplyModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+      
+      contactForm.reset();
+    });
+  }
+
+  // === AUTO-REPLY MODAL CLOSE ===
+  const closeAutoReply = document.getElementById('closeAutoReply');
+  const autoReplyModal = document.getElementById('autoReplyModal');
+
+  [closeAutoReply, autoReplyModal].forEach(el => {
+    el.addEventListener('click', (e) => {
+      if (e.target === autoReplyModal || e.target === closeAutoReply) {
+        autoReplyModal.classList.remove('active');
+        document.body.style.overflow = 'auto';
+      }
+    });
+  });
+});
+</script>
+
+</body>
+</html>
